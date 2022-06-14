@@ -12,3 +12,5 @@ https://www.opensubtitles.org/en/search/subs
 - GoogleTranslate (with Google Sheets):
 https://support.google.com/docs/answer/3093331?hl=en-GB
 https://cloud.google.com/translate/docs/languages?hl=en
+- pandas.DataFrame.to_dict: 
+https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_dict.html

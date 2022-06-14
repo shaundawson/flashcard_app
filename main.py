@@ -4,26 +4,18 @@ import random
 
 BACKGROUND_COLOR = "#B1DDC6"
 FONT_NAME = "Ariel"
-timer = None
+current_card = {}
+to_learn = {}
 
-
-
-# ---------------------------- FLIP THE CARDS------------------------------- # 
-def reset_timer():
-    window.after_cancel(timer)
-
-    global reps
-    reps = 0
-
-
-
+try:
+    data = pandas.read_csv("data/words_to_learn.csv")
+except: 
+    original_data = pandas.read_csv("data/french_words.csv")
+    to_learn = original_data.to_dict(orient="records")
+else:
+    to_learn = data.to_dict(orient="records")
 
 # ---------------------------- CARD FLIPPING MECHANISM ------------------------------- # 
-data = pandas.read_csv("data/french_words.csv")
-to_learn = data.to_dict(orient="records")
-
-current_card = {}
-
 def next_card():
     global current_card, flip_timer
     window.after_cancel(flip_timer)
@@ -37,6 +29,12 @@ def flip_card():
     canvas.itemconfig(card_title, text="English", fill="white")
     canvas.itemconfig(card_word, text=current_card["English"], fill="white")
     canvas.itemconfig(card_background, image=card_back_img)
+    
+def is_known():
+    to_learn.remove(current_card)
+    data = pandas.DataFrame(to_learn)
+    data.to_csv("data/words.to_learn.csv", index=False)
+    next_card()
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -57,11 +55,12 @@ canvas.grid(row=0, column=0, columnspan=2)
 
 #Buttons
 right_image = PhotoImage(file="images/right.png")
-right_button = Button(image=right_image,highlightthickness=0, highlightbackground=BACKGROUND_COLOR, command=next_card)
-right_button.grid(row=1, column=0)
+right_button = Button(image=right_image,highlightthickness=0, highlightbackground=BACKGROUND_COLOR, command=is_known)
+right_button.grid(row=1, column=1)
+
 wrong_image = PhotoImage(file="images/wrong.png")
 wrong_button = Button(image=wrong_image, highlightthickness=0, highlightbackground=BACKGROUND_COLOR, command= next_card)
-wrong_button.grid(row=1, column=1)
+wrong_button.grid(row=1, column=0)
 
 next_card()
 
